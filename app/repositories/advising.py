@@ -73,7 +73,7 @@ class AdvisingRepository:
             select(AdvisingAudit)
             .where(
                 AdvisingAudit.student_id == profile.id,
-                AdvisingAudit.status == "Draft",
+                AdvisingAudit.status.in_(["Draft", "Pending Approval"]),
             )
             .order_by(AdvisingAudit.updated_at.desc())
         ).first()
