@@ -12,10 +12,7 @@ async def user_home_view(
     user: AuthDep,
     db:SessionDep
 ):
-    return templates.TemplateResponse(
-        request=request, 
-        name="app.html",
-        context={
-            "user": user
-        }
+    return RedirectResponse(
+        url=request.url_for("course_audit_view"),
+        status_code=303,
     )

@@ -47,7 +47,7 @@ def cmd_init(args: argparse.Namespace) -> None:
 
 
 def cmd_seed(args: argparse.Namespace) -> None:
-    """Insert demo users.
+    """Insert demo users and starter advising data.
 
     bob / bobpass       (regular_user)
     admin / adminpass   (admin)
@@ -56,6 +56,13 @@ def cmd_seed(args: argparse.Namespace) -> None:
     from app.repositories.user import UserRepository
     from app.schemas.user import AdminCreate, RegularUserCreate
     from app.utilities.security import encrypt_password
+    from app.models.advising import (
+        Course,
+        DegreeRequirement,
+        OverrideRequest,
+        StudentProfile,
+    )
+    from sqlmodel import select
 
     _ensure_models_loaded()
     ensure_db_and_tables()
@@ -85,6 +92,89 @@ def cmd_seed(args: argparse.Namespace) -> None:
             )
             print(f"  create {username} ({role})")
             created += 1
+
+        bob = repo.get_by_username("bob")
+        if bob is not None:
+            profile = session.exec(
+                select(StudentProfile).where(StudentProfile.user_id == bob.id)
+            ).one_or_none()
+            if profile is None:
+                profile = StudentProfile(
+                    user_id=bob.id,
+                    student_number="816000001",
+                    degree_program="BSc Computer Science",
+                    gpa=3.25,
+                    credit_hours_completed=54,
+                )
+                session.add(profile)
+                session.commit()
+                session.refresh(profile)
+                print("  create bob's student profile")
+            else:
+                print("  skip  bob's student profile (already exists)")
+
+            starter_courses = [
+                ("COMP 3613", "Software Engineering II", 3, 300),
+                ("COMP 3410", "Database Systems", 3, 300),
+                ("COMP 3810", "Human Computer Interaction", 3, 300),
+            ]
+            seeded_courses = {}
+            for code, title, credits, level in starter_courses:
+                course = session.exec(
+                    select(Course).where(Course.code == code)
+                ).one_or_none()
+                if course is None:
+                    course = Course(
+                        code=code,
+                        title=title,
+                        credits=credits,
+                        level=level,
+                    )
+                    session.add(course)
+                    session.commit()
+                    session.refresh(course)
+                    print(f"  create course {code}")
+                else:
+                    print(f"  skip  course {code} (already exists)")
+                seeded_courses[code] = course
+
+            for code, course in seeded_courses.items():
+                requirement = session.exec(
+                    select(DegreeRequirement).where(
+                        DegreeRequirement.program_name == profile.degree_program,
+                        DegreeRequirement.course_id == course.id,
+                    )
+                ).one_or_none()
+                if requirement is None:
+                    session.add(
+                        DegreeRequirement(
+                            program_name=profile.degree_program,
+                            course_id=course.id,
+                            is_mandatory=code != "COMP 3810",
+                        )
+                    )
+                    session.commit()
+                    print(f"  create requirement {code}")
+
+            first_course = next(iter(seeded_courses.values()))
+            pending_override = session.exec(
+                select(OverrideRequest).where(
+                    OverrideRequest.student_id == profile.id,
+                    OverrideRequest.course_id == first_course.id,
+                    OverrideRequest.status == "Pending",
+                )
+            ).one_or_none()
+            if pending_override is None:
+                session.add(
+                    OverrideRequest(
+                        student_id=profile.id,
+                        course_id=first_course.id,
+                        override_type="Prerequisite",
+                        reason="Student requests a prerequisite waiver for the seeded demo plan.",
+                    )
+                )
+                session.commit()
+                print(f"  create pending override for {first_course.code}")
 
     print(f"Seed done — created {created}, skipped {skipped}.")
     print("Login with bob/bobpass or admin/adminpass")

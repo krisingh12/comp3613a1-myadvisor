@@ -1,0 +1,135 @@
+{% extends "authenticated-base.html" %}
+
+{% block title %}Manage Degree Plan Overrides & Rules{% endblock %}
+
+{% block subpage_content %}
+<div class="container-fluid px-0">
+  <div class="mb-4">
+    <p class="text-uppercase text-secondary small fw-semibold mb-1">Administrator workspace</p>
+    <h1 class="h3 mb-1">Manage Degree Plan Overrides & Rules</h1>
+    <p class="text-secondary mb-0">Maintain degree requirements, prerequisite rules, and the administrative audit trail.</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <span class="text-secondary">Pending overrides</span>
+          <strong class="fs-3 text-primary">{{ console.overrides|length }}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <span class="text-secondary">Recent audit entries</span>
+          <strong class="fs-3 text-primary">{{ console.logs|length }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <section class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Degree requirements</h2>
+          {% for requirement in console.requirements %}
+          <div class="d-flex justify-content-between border-bottom py-2">
+            <span>{{ requirement.program_name }} · Course {{ requirement.course_id }}</span>
+            <span class="status-badge status-badge-pending">
+              {{ "Mandatory" if requirement.is_mandatory else "Optional" }}
+            </span>
+          </div>
+          {% else %}
+          <p class="text-secondary mb-0">No degree requirements defined.</p>
+          {% endfor %}
+          <form method="post" action="{{ url_for('update_degree_requirement') }}" class="row g-2 mt-3">
+            <div class="col-md-5">
+              <label class="visually-hidden" for="program-name">Program name</label>
+              <input class="form-control" id="program-name" name="program_name" placeholder="Program name" required>
+            </div>
+            <div class="col-md-3">
+              <label class="visually-hidden" for="requirement-course">Course</label>
+              <select class="form-select" id="requirement-course" name="course_id" required>
+                {% for course in console.courses %}
+                <option value="{{ course.id }}">{{ course.code }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+              <label class="form-check-label">
+                <input class="form-check-input me-1" type="checkbox" name="is_mandatory" value="true">
+                Mandatory
+              </label>
+            </div>
+            <div class="col-md-2">
+              <button class="btn btn-primary w-100" type="submit">Save</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Prerequisite rules</h2>
+          {% for course in console.courses %}
+          <form method="post" action="{{ url_for('update_course_prerequisite') }}" class="row align-items-center g-2 border-bottom py-2">
+            <input type="hidden" name="course_id" value="{{ course.id }}">
+            <div class="col-md-4"><strong>{{ course.code }}</strong><span class="d-block small text-secondary">{{ course.title }}</span></div>
+            <div class="col-md-5">
+              <select class="form-select" name="prerequisite_course_id">
+                <option value="">No prerequisite</option>
+                {% for prerequisite in console.courses %}
+                {% if prerequisite.id != course.id %}
+                <option value="{{ prerequisite.id }}" {% if course.prerequisite_course_id == prerequisite.id %}selected{% endif %}>{{ prerequisite.code }}</option>
+                {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3"><button class="btn btn-outline-primary w-100" type="submit">Update rule</button></div>
+          </form>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+
+    <div class="col-lg-5">
+      <section class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Override requests</h2>
+          {% for override in console.overrides %}
+          <div class="border-bottom py-3">
+            <div class="d-flex justify-content-between">
+              <strong>{{ override.override_type }} override</strong>
+              <span class="status-badge status-badge-action">{{ override.status }}</span>
+            </div>
+            <p class="small text-secondary mb-2">{{ override.reason }}</p>
+            <form method="post" action="{{ url_for('resolve_override_request', override_id=override.id) }}" class="d-flex gap-2">
+              <button class="btn btn-sm btn-primary" name="decision" value="Approved" type="submit">Grant</button>
+              <button class="btn btn-sm btn-outline-secondary" name="decision" value="Rejected" type="submit">Reject</button>
+            </form>
+          </div>
+          {% else %}
+          <p class="text-secondary mb-0">No pending override requests.</p>
+          {% endfor %}
+        </div>
+      </section>
+
+      <section class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Audit and waiver trail</h2>
+          {% for log in console.logs %}
+          <div class="border-bottom py-2">
+            <strong class="small">{{ log.action }}</strong>
+            <span class="d-block text-secondary small">{{ log.details }}</span>
+          </div>
+          {% else %}
+          <p class="text-secondary mb-0">No administrative changes recorded yet.</p>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{
+  "system": "MyAdvisor",
+  "actors": [
+    {"name": "Student", "side": "left"},
+    {"name": "Academic Advisor", "side": "right"},
+    {"name": "Administrator", "side": "right"}
+  ],
+  "use_cases": [
+    {
+      "name": "Plan Semester Course Audit",
+      "actors": ["Student"],
+      "includes": [
+        "View Remaining Degree Requirements",
+        "Check Prerequisite Flags",
+        "Add Planned Courses",
+        "Submit Semester Audit"
+      ]
+    },
+    {"name": "View Remaining Degree Requirements"},
+    {"name": "Check Prerequisite Flags"},
+    {"name": "Add Planned Courses"},
+    {"name": "Submit Semester Audit"},
+    {
+      "name": "Revise and Resubmit Audit",
+      "extends": ["Plan Semester Course Audit"]
+    },
+    {
+      "name": "Review & Approvals Queue",
+      "actors": ["Academic Advisor"],
+      "includes": [
+        "View Pending Student Audits",
+        "View Compliance and Audit Logs",
+        "Add Advising Notes",
+        "Decide Audit Outcome"
+      ]
+    },
+    {"name": "View Pending Student Audits"},
+    {
+      "name": "View Compliance and Audit Logs",
+      "actors": ["Academic Advisor", "Administrator"]
+    },
+    {"name": "Add Advising Notes"},
+    {"name": "Decide Audit Outcome"},
+    {
+      "name": "Manage Degree Plan Overrides & Rules",
+      "actors": ["Administrator"],
+      "includes": [
+        "View Override Requests",
+        "View Compliance and Audit Logs",
+        "Update Program Requirement Templates",
+        "Record Immutable Audit Log"
+      ]
+    },
+    {"name": "View Override Requests"},
+    {
+      "name": "Grant Prerequisite Waiver",
+      "extends": ["Manage Degree Plan Overrides & Rules"]
+    },
+    {"name": "Update Program Requirement Templates"},
+    {"name": "Record Immutable Audit Log"}
+  ]
+}

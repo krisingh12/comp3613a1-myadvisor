@@ -1,0 +1,57 @@
+@startuml
+!pragma layout smetana
+skinparam shadowing false
+skinparam actorBorderColor #1B365D
+skinparam actorFontColor #1E232D
+skinparam usecaseBackgroundColor #FFFFFF
+skinparam usecaseBorderColor #1B365D
+skinparam usecaseFontColor #1E232D
+skinparam rectangleBorderColor #1B365D
+skinparam rectangleBackgroundColor #F8FAFC
+skinparam arrowColor #1B365D
+
+actor "Student" as Student
+
+rectangle "MyAdvisor" {
+  usecase "Plan Semester Course Audit" as Plan_Semester_Course_Audit
+  usecase "View Remaining Degree Requirements" as View_Remaining_Degree_Requirements
+  usecase "Check Prerequisite Flags" as Check_Prerequisite_Flags
+  usecase "Add Planned Courses" as Add_Planned_Courses
+  usecase "Submit Semester Audit" as Submit_Semester_Audit
+  usecase "Revise and Resubmit Audit" as Revise_and_Resubmit_Audit
+  usecase "Review & Approvals Queue" as Review_Approvals_Queue
+  usecase "View Pending Student Audits" as View_Pending_Student_Audits
+  usecase "View Compliance and Audit Logs" as View_Compliance_and_Audit_Logs
+  usecase "Add Advising Notes" as Add_Advising_Notes
+  usecase "Decide Audit Outcome" as Decide_Audit_Outcome
+  usecase "Manage Degree Plan Overrides & Rules" as Manage_Degree_Plan_Overrides_Rules
+  usecase "View Override Requests" as View_Override_Requests
+  usecase "Grant Prerequisite Waiver" as Grant_Prerequisite_Waiver
+  usecase "Update Program Requirement Templates" as Update_Program_Requirement_Templates
+  usecase "Record Immutable Audit Log" as Record_Immutable_Audit_Log
+}
+
+actor "Academic Advisor" as Academic_Advisor
+actor "Administrator" as Administrator
+
+Student --> Plan_Semester_Course_Audit
+Plan_Semester_Course_Audit ..> View_Remaining_Degree_Requirements : <<include>>
+Plan_Semester_Course_Audit ..> Check_Prerequisite_Flags : <<include>>
+Plan_Semester_Course_Audit ..> Add_Planned_Courses : <<include>>
+Plan_Semester_Course_Audit ..> Submit_Semester_Audit : <<include>>
+Revise_and_Resubmit_Audit ..> Plan_Semester_Course_Audit : <<extend>>
+Review_Approvals_Queue <-- Academic_Advisor
+Review_Approvals_Queue ..> View_Pending_Student_Audits : <<include>>
+Review_Approvals_Queue ..> View_Compliance_and_Audit_Logs : <<include>>
+Review_Approvals_Queue ..> Add_Advising_Notes : <<include>>
+Review_Approvals_Queue ..> Decide_Audit_Outcome : <<include>>
+View_Compliance_and_Audit_Logs <-- Academic_Advisor
+View_Compliance_and_Audit_Logs <-- Administrator
+Manage_Degree_Plan_Overrides_Rules <-- Administrator
+Manage_Degree_Plan_Overrides_Rules ..> View_Override_Requests : <<include>>
+Manage_Degree_Plan_Overrides_Rules ..> View_Compliance_and_Audit_Logs : <<include>>
+Manage_Degree_Plan_Overrides_Rules ..> Update_Program_Requirement_Templates : <<include>>
+Manage_Degree_Plan_Overrides_Rules ..> Record_Immutable_Audit_Log : <<include>>
+Grant_Prerequisite_Waiver ..> Manage_Degree_Plan_Overrides_Rules : <<extend>>
+
+@enduml

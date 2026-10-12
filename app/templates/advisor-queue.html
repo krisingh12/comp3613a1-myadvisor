@@ -1,0 +1,82 @@
+{% extends "authenticated-base.html" %}
+
+{% block title %}Review & Approvals Queue{% endblock %}
+
+{% block subpage_content %}
+<div class="container-fluid px-0">
+  <div class="mb-4">
+    <p class="text-uppercase text-secondary small fw-semibold mb-1">Advisor workspace</p>
+    <h1 class="h3 mb-1">Review & Approvals Queue</h1>
+    <p class="text-secondary mb-0">Review prerequisite checks, leave notes, and complete submitted audits.</p>
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body d-flex align-items-center justify-content-between">
+      <span class="text-secondary">Pending audits</span>
+      <strong class="fs-3 text-primary">{{ queue|length }}</strong>
+    </div>
+  </div>
+
+  {% for item in queue %}
+  <article class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+        <div>
+          <h2 class="h5 mb-1">{{ item.student.username if item.student else "Student" }}</h2>
+          <p class="text-secondary mb-0">{{ item.profile.student_number }} · {{ item.profile.degree_program }} · {{ item.audit.semester }}</p>
+        </div>
+        <span class="status-badge status-badge-pending">{{ item.audit.status }}</span>
+      </div>
+
+      <h3 class="h6">Prerequisite checks</h3>
+      <div class="table-responsive mb-3">
+        <table class="table align-middle">
+          <thead><tr><th>Course</th><th>Course status</th><th>Prerequisite result</th></tr></thead>
+          <tbody>
+            {% for course_item in item.courses %}
+            <tr>
+              <td>{{ course_item.course.code }} — {{ course_item.course.title }}</td>
+              <td>{{ course_item.status }}</td>
+              <td><span class="status-badge status-badge-pending">{{ course_item.prerequisite_result or "Not checked" }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <h3 class="h6">Advising notes</h3>
+          {% for note in item.notes %}
+          <div class="border-start border-3 border-primary ps-3 mb-2">
+            <p class="mb-1">{{ note.note_text }}</p>
+            <small class="text-secondary">{{ note.created_at.strftime("%Y-%m-%d %H:%M") }}</small>
+          </div>
+          {% else %}
+          <p class="text-secondary small">No notes have been added yet.</p>
+          {% endfor %}
+          <form method="post" action="{{ url_for('add_advisor_note', audit_id=item.audit.id) }}" class="mt-3">
+            <label class="form-label" for="note-{{ item.audit.id }}">Add note</label>
+            <textarea class="form-control mb-2" id="note-{{ item.audit.id }}" name="note_text" rows="2" required></textarea>
+            <button class="btn btn-outline-primary" type="submit">Save note</button>
+          </form>
+        </div>
+        <div class="col-lg-5 d-flex align-items-end justify-content-lg-end">
+          <form method="post" action="{{ url_for('decide_advisor_audit', audit_id=item.audit.id) }}" class="d-flex gap-2">
+            <button class="btn btn-primary" name="decision" value="approve" type="submit">Approve audit</button>
+            <button class="btn btn-outline-secondary" name="decision" value="revise" type="submit">Request changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </article>
+  {% else %}
+  <div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-5">
+      <h2 class="h5">Queue clear</h2>
+      <p class="text-secondary mb-0">There are no pending student audits to review.</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
