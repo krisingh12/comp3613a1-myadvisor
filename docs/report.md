@@ -1,3 +1,10 @@
+<!-- student-build:skill-integrity
+status: pass
+root: e84cd692d0b85eefe546385661958c27d07e8be6c5176a82012f68ccff5c8beb
+expected_root: e84cd692d0b85eefe546385661958c27d07e8be6c5176a82012f68ccff5c8beb
+mismatches: none
+-->
+
 # COMP 3613 Assignment 1
 
 Draft this file with the Guide. **Update it after every phase milestone** before you pause. The use-case diagram is a UML PNG at `docs/diagrams/use-case.png`, linked from this file as `diagrams/use-case.png` (path relative to `docs/report.md`). The model diagram is Mermaid. **Embed wireframe images** as `wireframes/<file>` (files live in `docs/wireframes/`).
@@ -276,7 +283,11 @@ note: Student bound the thin route to user.id and the AdvisingService; no persis
 
 Phase 6. Public Render URL (not localhost). Markers open this to mark the three workflows.
 
-https://
+https://faststarter-pgv4.onrender.com
+
+## GitHub Repo
+
+https://github.com/krisingh12/comp3613a1-myadvisor.git
 
 ## Logins
 
@@ -287,14 +298,105 @@ Every account a marker needs, including extra users you added. Starter accounts:
 
 ## YouTube URL
 
+https://youtu.be/lqfHwdz2qms
+
 ## Session transcripts
 
-Filled when the Guide builds the report: the agent writes each Guide chat to `docs/transcripts/<slug>.md` (Copilot Agent, Cursor, or OpenCode). `python manage.py report` packages them. Do not paste chats here during the build.
+Filled when the Guide builds the report: the agent writes chat markdown into `docs/transcripts/`; `python manage.py report` packages them.
+
+Guide packaged **1** chat(s) in `docs/transcripts/` (and `docs/transcripts.zip`).
+
+Index: [docs/transcripts/INDEX.md](transcripts/INDEX.md)
+
+- [`session1`](transcripts/session1.md)
 
 ## Competency (student-judge)
 
-Filled when the report is built. Guide runs student-judge, writes `docs/judge.md`, and export appends the scorecard here.
+Filled by Guide from the student-judge run when this report was built.
+
+**Judged at:** 2026-10-12T22:45:00-04:00  
+**Evidence pass:** re-read accessible native Copilot chats, current `docs/report.md`, `docs/diagrams/`, `docs/wireframes/`, and refreshed `docs/transcripts/session1.md`; prior `judge.md` ignored
+
+**Student / session:** Kristopher Boodoosingh / MyAdvisor  
+**Artifact:** Four accessible Copilot Agent project sessions and `docs/transcripts/session1.md`  
+**Phases in evidence:** 1–6 (COMP 3613; Phase 5 polish, Phase 6 deploy)
+
+## Totals
+
+| | Count / value |
+|--|--|
+| Metrics on rubric | 12 (M1–M12) |
+| N/A (excluded) | 0 |
+| Metrics scored | 12 |
+| Scoreable max | 48 |
+| Awarded total | 47 / 48 |
+| **Overall (avg of scored)** | **3.9 / 4** |
+| Impression mark | 19 / 20 |
+
+## Scorecard
+
+| ID | Metric | Score / 4 | In avg | Evidence |
+|----|--------|----------:|:------:|----------|
+| M1 | Phase discipline | 4 | yes | The sessions separate design phases, defer app code until wireframes, implement one workflow at a time, record verification and polish, then deploy. |
+| M2 | Problem framing | 4 | yes | The student named MyAdvisor and three `Feature (user)` workflows, then supplied the entity/property list. Quote: “Workflows (exactly three): 1. Plan Semester Course Audit … 2. Review & Approvals Queue … 3. Manage Degree Plan Overrides & Rules …” |
+| M3 | Decision ownership | 3 | yes | The student owned the workflows, model list, wireframe completion behavior, theming, and polish choices. Include/extend structure was mostly inferred by the Guide rather than answered in a separate student turn, so this is solid but not fully self-directed. |
+| M4 | Artefact-before-code | 4 | yes | The UML use-case PNG, Mermaid ERD, three wireframes, and report notes precede the Phase 5 implementation. The implementation notes explicitly connect routers, services, repositories, and models to those artefacts. |
+| M5 | Verification habit | 4 | yes | The report records observed results for all three workflows, including seeded data, status transitions, approval/revision actions, admin updates, and final summary-card verification. Quote: “student confirmed the seeded override request, summary cards, and requirement/prerequisite management panels display clearly.” |
+| M6 | Assignment fit | 4 | yes | The final implementation follows the wireframes and ERD, reuses FastStarter auth, uses thin routes with service/repository layers, applies the requested theme, and records a completed Render deployment. |
+| M7 | Slice explanation | 4 | yes | Each workflow has model and router code-check evidence with `architecture_ok: yes`; the report states routes call services without persistence logic and records the service-layer choice for approval/revision coordination. |
+| M8 | Prompt quality | 4 | yes | Prompts are phase-tagged, use the required workflow format, provide wireframes at the correct phase, and include concrete deployment and verification requests. |
+| M9 | Response to pushback | 4 | yes | The student addressed the missing profile/seed-data issue, chose prerequisite-result badges, chose queue and admin summary cards, and verified the resulting refinements instead of stopping at the first build. |
+| M10 | Integrity | 4 | yes | The current report records skill-integrity `pass`; the accessible transcript contains no laundering flags, edited-skill evidence, or forced paste-back. |
+| M11 | Provenance continuity | 4 | yes | The implementation and report consistently grow from the student’s MyAdvisor workflows, supplied entities, wireframes, status rules, and polish decisions. |
+| M12 | Sincerity trajectory | 4 | yes | No suspicion blocks were needed; there is no abandonment or unresolved integrity spiral in the accessible project sessions. |
+
+## Strengths
+
+- Clear student-owned project framing with three complete workflows.
+- Strong artefact continuity from use-case diagram and ERD through wireframes and implementation.
+- Concrete verification and polish across all three workflows.
+- Architecture-respecting model and thin-route snippets for every workflow.
+- Phase 6 deployment evidence is recorded with a public URL and marker logins.
+
+## Gaps (priority order)
+
+1. Include/extend and shared-use-case decisions in Phase 2 were recorded primarily by the Guide after a concise prompt, so future work should make those relationship decisions explicit in the student’s own response.
+
+## Phase gate status
+
+| Phase | Status | Note |
+|-------|--------|------|
+| 1 | met | Project and three named workflows recorded. |
+| 2 | met | Use-case PNG generated and included/extended/shared structure recorded. |
+| 3 | met | Student supplied entities/properties and the ERD relationships were recorded. |
+| 4 | met | All three wireframes were reviewed, coverage was complete, and the unclear submission/revision path was clarified. |
+| 5 | met | Theme, one-workflow-at-a-time implementation, verification, and polish/model revisions are recorded. |
+| 6 | met | Render URL is present in the report and marker logins are documented; deployment source is the pushed project. |
+
+## Recommended next practice
+
+- In the next design phase, answer the include/extend and shared-use-case prompts explicitly before the Guide drafts the diagram, using one short decision line per relationship.
+
+## Integrity note
+
+- Clean — no suspicion spiral, edited skills, or external-assist evidence was found in the accessible records.
+
+## Provenance flags
+
+- None.
+
+## Sincerity log summary
+
+- Blocks found: 0 | max round: 0 | min/mean/final confidence: N/A | trend: none | cleared: yes
+
+## Skips
+
+- Skips: 0/3 used. Skips are not an integrity failure.
 
 ## Skill integrity
 
-Filled by `python manage.py report`. Do not edit the course skills.
+Course skills are hashed at export and compared to `.agents/skills.lock.json`. Do not edit `.agents/skills/`, `.cursor/skills/`, or `AGENTS.md`.
+
+- Status: **pass**
+- Root: `e84cd692d0b85eefe546385661958c27d07e8be6c5176a82012f68ccff5c8beb`
+- none

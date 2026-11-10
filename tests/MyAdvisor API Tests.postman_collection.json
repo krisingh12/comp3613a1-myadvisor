@@ -1,0 +1,120 @@
+{
+  "info": {
+    "_postman_id": "5bab49a5-f156-4721-9157-d70b6003471b",
+    "name": "MyAdvisor API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52640003",
+    "_collection_link": "https://go.postman.co/collection/52640003-5bab49a5-f156-4721-9157-d70b6003471b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "User Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Login Endpoint Responds Successfully\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "username",
+              "value": "bob"
+            },
+            {
+              "key": "password",
+              "value": "bobpass"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://faststarter-pgv4.onrender.com/login",
+          "protocol": "https",
+          "host": [
+            "faststarter-pgv4",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Student Advising Workspace",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Course Audit Workspace HTML Payload\", function () {\r\n    pm.response.to.have.status(200);\r\n    pm.expect(pm.response.text()).to.include(\"MyAdvisor\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://faststarter-pgv4.onrender.com/app/course-audit",
+          "protocol": "https",
+          "host": [
+            "faststarter-pgv4",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "app",
+            "course-audit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Advisor Queue Workspace",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Advisor Queue Workspace Payload\", function () {\r\n    pm.response.to.have.status(200);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://faststarter-pgv4.onrender.com/app/advisor/queue",
+          "protocol": "https",
+          "host": [
+            "faststarter-pgv4",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "app",
+            "advisor",
+            "queue"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
